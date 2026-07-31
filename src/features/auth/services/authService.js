@@ -1,5 +1,14 @@
-import {loginRequest} from "../api/auth.api";
+import {loginRequest,getCurrentUserRequest,} from "../api/auth.api";
 
-export const loginUser = async (credentials) => {
+
+// Login workflow
+export async function loginUser(credentials) {
     return await loginRequest(credentials);
-};
+}
+
+
+
+// Get current authenticated user
+export async function getCurrentUser() {
+    return await getCurrentUserRequest();
+}

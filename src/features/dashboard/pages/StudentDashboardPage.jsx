@@ -1,5 +1,5 @@
+import DashboardContent from "../components/DashboardContent";
+
 export default function  StudentDashboardPage(){
-    return (
-        <h1>Student dashboard</h1>
-    );
+    return <DashboardContent />
 };

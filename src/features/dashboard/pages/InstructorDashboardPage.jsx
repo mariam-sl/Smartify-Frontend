@@ -1,5 +1,5 @@
-  export default function InstructorDashboardPage() {
-    return  (
-        <h1>Instructor dashboard</h1>
-    );
-  };
+import DashboardContent from "../components/DashboardContent";
+
+export default function  InstructorDashboardPage(){
+    return <DashboardContent />
+};

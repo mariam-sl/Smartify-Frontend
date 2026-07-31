@@ -1,37 +1,105 @@
-import {create} from "zustand";
-import {getAccessToken , setTokens , clearTokens} from "../services/tokenService";
-import { getUserFromToken } from "../utils/auth.helpers";
-import {isTokenExpired} from "../services/tokenService";
+import { create } from "zustand";
 
-export const useAuthStore = create ((set) => ({
-    user:null,
-    isAuthenticated:false,
-    isLoading:true, 
+import { loginUser, getCurrentUser } from "../services/authService";
 
-    initialize : () => {
-        const token=getAccessToken();
+import { getAccessToken,setTokens,clearTokens,isTokenExpired,} from "../services/tokenService";
 
-        if(!token || isTokenExpired(token)) {
-            clearTokens();
-            set({user:null,isAuthenticated:false,isLoading:false});
-            return ;
-        }
+export const useAuthStore = create((set) => ({
+   // State
+  user: null,
+  isAuthenticated: false,
+  isInitializing: true,
 
-        const user =getUserFromToken(token);
+  // Initialize authentication
+  initialize: async () => {
+    const token = getAccessToken();
 
-        set({user,isAuthenticated:!!user,isLoading:false,});
-    },
+    // No token
+    if (!token) {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isInitializing: true,
+      });
 
-    login:({accessToken ,refreshToken}) => {
-        setTokens({accessToken,refreshToken});
+      return;
+    }
 
-        const user = getUserFromToken(accessToken);
-        set({user,isAuthenticated:true,});
-    },
+    // Expired token
+    if (isTokenExpired(token)) {
+      clearTokens();
+      set({
+        user: null,
+        isAuthenticated: false,
+        isInitializing: false,
+      });
 
-    logout:()=>{
-        clearTokens();
-        set({user:null,isAuthenticated:false,});
-        window.location.href="/login";
-    },
+      return;
+    }
+
+    try {
+      const user = await getCurrentUser();
+      set({
+        user,
+        isAuthenticated: true,
+        isInitializing: false,
+      });
+    } catch (error) {
+      clearTokens();
+      set({
+        user: null,
+        isAuthenticated: false,
+        isInitializing: false,
+      });
+    }
+  },
+
+ 
+  // Login
+  login: async (credentials) => {
+    const { accessToken, refreshToken } = await loginUser(credentials);
+
+    // Save tokens first
+    setTokens({
+      accessToken,
+      refreshToken, 
+   });
+
+    // Now token exists
+    // so /users/me can work
+    const user = await getCurrentUser();
+    set({
+      user,
+      isAuthenticated: true,
+      isInitializing: false,
+    });
+
+    return user;
+  },
+
+  
+  // Logout
+  logout: () => {
+    clearTokens();
+    set({
+      user: null,
+      isAuthenticated: false,
+    });
+  },
+
+
+  // Helpers
+  setUser: (user) => {
+    set({
+      user,
+      isAuthenticated: true,
+    });
+  },
+
+  clearUser: () => {
+    set({
+      user: null,
+      isAuthenticated: false,
+    });
+  },
 }));

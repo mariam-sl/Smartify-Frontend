@@ -1,20 +1,33 @@
-import {Navigate,Outlet,useLocation} from "react-router-dom";
-import {useAuthStore} from "@/features/auth/store/auth.store";
-import {ROUTES} from "@/shared/constants/routes";
+import { Navigate, Outlet } from "react-router-dom";
+
+
+import LoadingState 
+from "@/shared/components/feedback/LoadingState";
+
+
+import useAuth from "@/features/auth/hooks/useAuth";
+
+
 
 export default function ProtectedRoute(){
-    const {isAuthenticated,isLoading} =useAuthStore();
-    const location=useLocation();
 
-    if(isLoading){
-        return <div>Loading...</div>
-    }
+    const { user,isAuthenticated,isInitializing} = useAuth();
 
-    if(!isAuthenticated){
+    if(isInitializing){
         return (
-            <Navigate to={ROUTES.LOGIN} replace state={{from:location}}/>
+            <LoadingState message="Checking authentication..." />
         );
     }
 
-    return <Outlet />; 
+
+    if(!isAuthenticated || !user){
+        return (
+            <Navigate  to="/login" replace  />
+        );
+
+    }
+
+    return <Outlet />;
+
+
 }

@@ -1,7 +1,7 @@
 import {Route} from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
-import RoleRoutes from "./RoleRoutes";
+import RoleRoutes from "./RoleRoute";
 
 import DashboardLayout from "@/app/layouts/DashboardLayout";
 

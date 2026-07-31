@@ -1,30 +1,49 @@
-import {Card,CardContent} from "@/shared/components/ui/Card";
 import LoginForm from "../components/LoginForm";
 
-export default function LoginPage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 p-4">
+import {
+    Card,
+    CardContent,
+    CardHeader,
+} from "@/shared/components/ui/Card";
 
-      <Card className="w-full max-w-md ">
 
-        <CardContent className="p-8">
+export default function LoginPage(){
 
-          <div className="mb-6">
+    return (
 
-            <h1 className="text-2xl font-bold">
-              Welcome Back
-            </h1>
+        <div>
 
-            <p className="mt-1 text-slate-600">
-              Login to your account
-            </p>
 
-          </div>
+            <Card className="w-full max-w-md">
 
-          <LoginForm />
 
-        </CardContent>
-      </Card>
-    </div>
-  );
+                <CardHeader>
+
+                    <h1 className="text-2xl font-bold text-slate-900">
+                        Welcome back
+                    </h1>
+
+
+                    <p className="mt-2 text-sm text-slate-500">
+                        Login to continue  with Smartify
+                    </p>
+
+                </CardHeader>
+
+
+
+                <CardContent>
+
+                    <LoginForm />
+
+                </CardContent>
+
+
+            </Card>
+
+
+        </div>
+
+    );
+
 }
